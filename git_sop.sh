@@ -115,7 +115,7 @@ function push_for_review()
 function modify_branch()
 {
     git branch
-    read -p "Which branch do you want to push for review?" branchname
+    read -p "Which branch do you want to modify?" branchname
     search_branch $branchname 
     search_status
     git checkout $branchname 2>&1 >/dev/null
@@ -135,6 +135,7 @@ function commit_branch()
     git push 
     git push origin --delete $branchname 2>/dev/null
     git branch --delete $branchname
+    git remote prune
 }
 
 function review_branch()
@@ -166,6 +167,19 @@ function review_branch()
         echo "unsupport input,you can rerun the script"
             ;;
     esac
+}
+
+function after_review_branch()
+{
+
+    git branch -avv
+    read -p "Which branch is reviewed by you,such as origin/XXX?" branchname
+    search_result $branchname "origin/"
+    search_branch $branchname
+
+    git push origin --delete $branchname 2>/dev/null
+    git remote prune
+    echo "notify the branch developer to commit his branch to develop branch"
 }
 
 
@@ -206,7 +220,8 @@ case $userchoice in
         review_branch
         ;;
     "7")
-        echo $userchoice
+        check_env
+        after_review_branch
         ;;
     *)
         echo "unsupport input,you can rerun the script"
