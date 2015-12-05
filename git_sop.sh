@@ -11,6 +11,7 @@
 
 #!/bin/sh
 
+#check the network and config before operation
 function check_env() 
 {
     git fetch --all 
@@ -18,8 +19,25 @@ function check_env()
         echo "cann't connect to git repository,please check your network"
         exit 
     fi
+
+    if [ -f ~/.gitconfig ]; then
+        searchresult=$(cat ~/.gitconfig | grep "name")
+        if [ -z "${searchresult}" ]; then
+            echo "username has not been set,please use"
+            echo "git config --global user.name "XXX""
+            exit
+        fi
+        searchresult=$(cat ~/.gitconfig | grep "email")
+        if [ -z "${searchresult}" ]; then
+            echo "useremail has not been set,please use"
+            echo "git config --global user.email "XXX""
+            exit
+        fi
+    fi
 }
 
+
+#check the argument 2 is contained by argument 1
 function search_result()
 {
     searchresult=$(echo $1|grep $2)
@@ -32,6 +50,7 @@ function search_result()
     fi
 }
 
+#check the branch is exist or not?
 function search_branch()
 {
     searchresult=$(git branch -avv|grep $1)
@@ -41,11 +60,12 @@ function search_branch()
     fi
 }
 
+#check the working_directory clean or not?
 function search_status()
 {
     searchresult=$(git status|grep "working directory clean")
     if [ -z "${searchresult}" ]; then
-        echo "your working branch: $1 is not clean,are you sure to push?(y/n)"
+        echo "your working branch: $1 is not clean,are you sure to continue?(y/n)"
         read userbool
         if [ ${userbool} != 'y' ]; then
             exit
@@ -86,10 +106,20 @@ function push_for_review()
     git push -u origin $branchname 2>&1 >/dev/null
 
     if [ $? -eq 0 ]; then
-        echo "\npush success,notify your partner to review"
+        echo "push success,notify your partner to review"
     else 
         echo "something is wrong"
     fi
+}
+
+function modify_branch()
+{
+    git branch
+    read -p "Which branch do you want to push for review?" branchname
+    search_branch $branchname 
+    search_status
+    git checkout $branchname 2>&1 >/dev/null
+    echo "Now you are in branch $branchname,enjoy you code!"
 }
 
 
@@ -119,7 +149,7 @@ case $userchoice in
         push_for_review
         ;;
     "4")
-        echo $userchoice
+        modify_branch
         ;;
     "5")
         echo $userchoice
