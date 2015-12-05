@@ -86,7 +86,7 @@ function push_for_review()
     git push -u origin $branchname 2>&1 >/dev/null
 
     if [ $? -eq 0 ]; then
-        echo "push success,notify your partner to review"
+        echo "\npush success,notify your partner to review"
     else 
         echo "something is wrong"
     fi
