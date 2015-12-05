@@ -7,7 +7,6 @@
 #If you are not familiar with git and our SOP,using this script is a good choice.
 #If you are familiar with git,I suggest you can use git with command line by your own.
 #Anyway,I hope you will like git and coding.
-#I love my wife 
 
 #!/bin/sh
 
