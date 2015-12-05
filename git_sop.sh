@@ -11,7 +11,6 @@
 #I love my wife 
 #I love my wife 
 
-
 #!/bin/sh
 
 #check the network and config before operation
