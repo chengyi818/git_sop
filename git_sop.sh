@@ -179,7 +179,6 @@ function after_review_branch()
     search_branch $branchname
 
     remotename=${branchname#*/}
-    echo $remotename
     git push origin --delete $remotename 2>/dev/null
     git remote prune origin
     echo "notify the branch developer to commit his branch to develop branch"
