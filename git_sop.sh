@@ -140,6 +140,8 @@ function commit_branch()
         git branch --delete $branchname
         git remote prune origin
     else 
+        git push origin --delete $branchname 2>/dev/null
+        git remote prune origin
         echo "merge confict,some file had been modify after you checkout"
     fi
 }
