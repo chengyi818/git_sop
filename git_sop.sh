@@ -133,6 +133,7 @@ function commit_branch()
     search_status
     git branch develop origin/develop 2>/dev/null
     git checkout develop
+    git merge origin/develop
     git merge --no-ff $branchname
     git push 
     git push origin --delete $branchname 2>/dev/null
