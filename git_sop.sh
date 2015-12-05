@@ -128,7 +128,7 @@ function commit_branch()
     read -p "Which branch do you want to commit to develop branch?" branchname
     search_branch $branchname
     search_status
-    git checkout -b develop origin/develop
+    git checkout -b develop origin/develop 2>/dev/null
     git merge --no-ff $branchname
     git push 
     git push origin --delete $branchname
