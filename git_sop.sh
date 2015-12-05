@@ -196,8 +196,8 @@ echo "2) fix a bug in develop branch"
 echo "3) push a branch for review"
 echo "4) modify a branch after review failure"
 echo "5) commit a branch after review success"
-echo "6) review a branch"
-echo "7) review a branch success"
+echo "6) as a CTT,review a branch"
+echo "7) as a CTT,after review a finished branch"
 
 read -p "Please input the index number:" userchoice
 
