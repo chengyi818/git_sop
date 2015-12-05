@@ -122,6 +122,19 @@ function modify_branch()
     echo "Now you are in branch $branchname,enjoy you code!"
 }
 
+function commit_branch()
+{
+    git branch
+    read -p "Which branch do you want to commit to develop branch?" branchname
+    search_branch $branchname
+    search_status
+    git checkout -b develop origin/develop
+    git merge --no-ff $branchname
+    git push 
+    git push origin --delete $branchname
+    git branch --delete $branchname
+}
+
 
 
 echo "Welcome,what do you want?"
@@ -152,7 +165,7 @@ case $userchoice in
         modify_branch
         ;;
     "5")
-        echo $userchoice
+        commit_branch
         ;;
     "6")
         echo $userchoice
