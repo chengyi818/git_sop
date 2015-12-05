@@ -65,7 +65,7 @@ function search_status()
 {
     searchresult=$(git status|grep "working directory clean")
     if [ -z "${searchresult}" ]; then
-        echo "your working branch: $1 is not clean,are you sure to continue?(y/n)"
+        echo "your working branch is not clean,are you sure to continue?(y/n)"
         read userbool
         if [ ${userbool} != 'y' ]; then
             exit
