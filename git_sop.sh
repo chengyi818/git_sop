@@ -41,6 +41,18 @@ function search_branch()
     fi
 }
 
+function search_status()
+{
+    searchresult=$(git status|grep "working directory clean")
+    if [ -z "${searchresult}" ]; then
+        echo "your working branch: $1 is not clean,are you sure to push?(y/n)"
+        read userbool
+        if [ ${userbool} != 'y' ]; then
+            exit
+        fi
+    fi
+}
+
 function develop_new_feature()
 {
     read -p "Please give me a branch name,such as Featrure-XXX:" branchname
@@ -70,6 +82,7 @@ function push_for_review()
     search_branch $branchname 
 
     git checkout $branchname 2>&1 >/dev/null
+    search_status
     git push -u origin $branchname 2>&1 >/dev/null
 
     if [ $? -eq 0 ]; then
