@@ -23,13 +23,13 @@ function check_env()
     if [ -f ~/.gitconfig ]; then
         searchresult=$(cat ~/.gitconfig | grep "name")
         if [ -z "${searchresult}" ]; then
-            echo "username has not been set,please use"
+            echo "username has not been set,please use first"
             echo "git config --global user.name "XXX""
             exit
         fi
         searchresult=$(cat ~/.gitconfig | grep "email")
         if [ -z "${searchresult}" ]; then
-            echo "useremail has not been set,please use"
+            echo "useremail has not been set,please use first"
             echo "git config --global user.email "XXX""
             exit
         fi
@@ -140,7 +140,6 @@ function commit_branch()
 
 function review_branch()
 {
-    git fetch --all
     git branch -avv
     read -p "Which branch do you want to review,such as origin/XXX?" branchname
     search_result $branchname "origin/"
