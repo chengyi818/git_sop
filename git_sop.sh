@@ -8,8 +8,6 @@
 #If you are familiar with git,I suggest you can use git with command line by your own.
 #Anyway,I hope you will like git and coding.
 #I love my wife 
-#I love my wife 
-#I love my wife 
 
 #!/bin/sh
 
