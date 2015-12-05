@@ -135,7 +135,7 @@ function commit_branch()
     git push 
     git push origin --delete $branchname 2>/dev/null
     git branch --delete $branchname
-    git remote prune
+    git remote prune origin
 }
 
 function review_branch()
@@ -178,7 +178,7 @@ function after_review_branch()
     search_branch $branchname
 
     git push origin --delete $branchname 2>/dev/null
-    git remote prune
+    git remote prune origin
     echo "notify the branch developer to commit his branch to develop branch"
 }
 
