@@ -119,6 +119,7 @@ function modify_branch()
     search_branch $branchname 
     search_status
     git checkout $branchname 2>&1 >/dev/null
+    git pull
     echo "Now you are in branch $branchname,enjoy you code!"
 }
 
@@ -128,11 +129,43 @@ function commit_branch()
     read -p "Which branch do you want to commit to develop branch?" branchname
     search_branch $branchname
     search_status
-    git checkout -b develop origin/develop 2>/dev/null
+    git branch develop origin/develop 2>/dev/null
+    git checkout develop
     git merge --no-ff $branchname
     git push 
-    git push origin --delete $branchname
+    git push origin --delete $branchname 2>/dev/null
     git branch --delete $branchname
+}
+
+function review_branch()
+{
+    git fetch --all
+    git branch -avv
+    read -p "Which branch do you want to review,such as origin/XXX?" branchname
+    search_result $branchname "origin/"
+    search_branch $branchname
+
+    echo "How to review?"
+    echo "1) gitk"
+    echo "2) git diff"
+    echo "3) others"
+    read -p "Please input the index number:" userchoice
+
+    case $userchoice in 
+        "1")
+            gitk --all &
+            ;;
+        "2")
+            git diff origin/develop...$branchname
+            ;;
+        "3")
+            echo "you can review the branch by you own"
+            exit
+            ;;
+        *)
+        echo "unsupport input,you can rerun the script"
+            ;;
+    esac
 }
 
 
@@ -165,10 +198,12 @@ case $userchoice in
         modify_branch
         ;;
     "5")
+        check_env
         commit_branch
         ;;
     "6")
-        echo $userchoice
+        check_env
+        review_branch
         ;;
     "7")
         echo $userchoice
