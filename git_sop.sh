@@ -140,7 +140,6 @@ function commit_branch()
 
 function review_branch()
 {
-    git fetch --all
     git branch -avv
     read -p "Which branch do you want to review,such as origin/XXX?" branchname
     search_result $branchname "origin/"
