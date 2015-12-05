@@ -8,6 +8,7 @@
 #If you are familiar with git,I suggest you can use git with command line by your own.
 #Anyway,I hope you will like git and coding.
 #I love my wife 
+#I love my wife 
 
 
 #!/bin/sh
@@ -177,7 +178,7 @@ function after_review_branch()
     search_result $branchname "origin/"
     search_branch $branchname
 
-    remotename=$(branchname#*/)
+    remotename=${branchname#*/}
     echo $remotename
     git push origin --delete $remotename 2>/dev/null
     git remote prune origin
