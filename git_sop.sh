@@ -24,13 +24,13 @@ function check_env()
     if [ -f ~/.gitconfig ]; then
         searchresult=$(cat ~/.gitconfig | grep "name")
         if [ -z "${searchresult}" ]; then
-            echo "username has not been set,please use first"
+            echo "username has not been set,please use"
             echo "git config --global user.name "XXX""
             exit
         fi
         searchresult=$(cat ~/.gitconfig | grep "email")
         if [ -z "${searchresult}" ]; then
-            echo "useremail has not been set,please use first"
+            echo "useremail has not been set,please use"
             echo "git config --global user.email "XXX""
             exit
         fi
@@ -156,7 +156,8 @@ function review_branch()
     echo "How to review?"
     echo "1) gitk"
     echo "2) git diff"
-    echo "3) others"
+    echo "3) git difftool"
+    echo "4) others"
     read -p "Please input the index number:" userchoice
 
     case $userchoice in 
@@ -167,6 +168,17 @@ function review_branch()
             git diff origin/develop...$branchname
             ;;
         "3")
+            if [ -f ~/.gitconfig ]; then
+                searchresult=$(cat ~/.gitconfig | grep "diff")
+                if [ -z "${searchresult}" ]; then
+                    echo "difftool has not been set,please use"
+                    echo "git config --global diff.tool "XXX""
+                    exit
+                fi
+            fi
+            git difftool origin/develop...$branchname
+            ;;
+        "4")
             echo "you can review the branch by you own"
             exit
             ;;
