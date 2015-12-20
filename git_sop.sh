@@ -13,7 +13,7 @@
 #!/bin/sh
 
 #check the network and config before operation
-function check_env() 
+check_env() 
 {
     git fetch --all 
     if [ $? -ne '0' ]; then
@@ -39,7 +39,7 @@ function check_env()
 
 
 #check the argument 2 is contained by argument 1
-function search_result()
+search_result()
 {
     searchresult=$(echo $1|grep $2)
     if [ -z "${searchresult}" ]; then
@@ -52,7 +52,7 @@ function search_result()
 }
 
 #check the branch is exist or not?
-function search_branch()
+search_branch()
 {
     searchresult=$(git branch -avv|grep $1)
     if [ -z "${searchresult}" ]; then
@@ -62,7 +62,7 @@ function search_branch()
 }
 
 #check the working_directory clean or not?
-function search_status()
+search_status()
 {
     searchresult=$(git status|grep "working directory clean")
     if [ -z "${searchresult}" ]; then
@@ -74,7 +74,7 @@ function search_status()
     fi
 }
 
-function develop_new_feature()
+develop_new_feature()
 {
     read -p "Please give me a branch name,such as Feature-XXX:" branchname
 
@@ -85,7 +85,7 @@ function develop_new_feature()
     echo "Now you are in branch $branchname,enjoy your code!"
 }
 
-function fix_bug()
+fix_bug()
 {
     read -p "Please give me a branch name,such as Bug-XXX:" branchname
 
@@ -96,7 +96,7 @@ function fix_bug()
     echo "Now you are in branch $branchname,Fix the bug Now!"
 }
 
-function push_for_review()
+push_for_review()
 {
     git branch
     read -p "Which branch do you want to push for review?" branchname
@@ -113,7 +113,7 @@ function push_for_review()
     fi
 }
 
-function modify_branch()
+modify_branch()
 {
     git branch
     read -p "Which branch do you want to modify?" branchname
@@ -124,7 +124,7 @@ function modify_branch()
     echo "Now you are in branch $branchname,enjoy you code!"
 }
 
-function commit_branch()
+commit_branch()
 {
     git branch
     read -p "Which branch do you want to commit to develop branch?" branchname
@@ -146,7 +146,7 @@ function commit_branch()
     fi
 }
 
-function review_branch()
+review_branch()
 {
     git branch -avv
     read -p "Which branch do you want to review,such as origin/XXX?" branchname
@@ -188,7 +188,7 @@ function review_branch()
     esac
 }
 
-function after_review_branch()
+after_review_branch()
 {
 
     git branch -avv
