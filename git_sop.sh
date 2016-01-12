@@ -1,5 +1,6 @@
 #Maintainer: Fat cheng
 #Email： chengyi818@foxmail.com
+#Maintainer: rui zhang
 #
 #Description:
 #This is a bash shell script designed for git beginner.
@@ -8,12 +9,12 @@
 #If you are not familiar with git and our SOP,using this script is a good choice.
 #If you are familiar with git,I suggest you can use git with command line by your own.
 #Anyway,I hope you will like git and coding.
-#I love my wife!
+#I love my wife 
 
 #!/bin/sh
 
 #check the network and config before operation
-check_env() 
+function check_env() 
 {
     git fetch --all 
     if [ $? -ne '0' ]; then
@@ -24,13 +25,13 @@ check_env()
     if [ -f ~/.gitconfig ]; then
         searchresult=$(cat ~/.gitconfig | grep "name")
         if [ -z "${searchresult}" ]; then
-            echo "username has not been set,please use"
+            echo "username has not been set,please use first"
             echo "git config --global user.name "XXX""
             exit
         fi
         searchresult=$(cat ~/.gitconfig | grep "email")
         if [ -z "${searchresult}" ]; then
-            echo "useremail has not been set,please use"
+            echo "useremail has not been set,please use first"
             echo "git config --global user.email "XXX""
             exit
         fi
@@ -39,7 +40,7 @@ check_env()
 
 
 #check the argument 2 is contained by argument 1
-search_result()
+function search_result()
 {
     searchresult=$(echo $1|grep $2)
     if [ -z "${searchresult}" ]; then
@@ -52,7 +53,7 @@ search_result()
 }
 
 #check the branch is exist or not?
-search_branch()
+function search_branch()
 {
     searchresult=$(git branch -avv|grep $1)
     if [ -z "${searchresult}" ]; then
@@ -61,8 +62,18 @@ search_branch()
     fi
 }
 
+#check the local branch is exist or not?
+function search_local_branch()
+{
+    searchresult=$(git branch |grep $1)
+    if [ -n "${searchresult}" ]; then
+        echo "branch: $1 is already exist,please check your branch"
+        exit
+    fi
+}
+
 #check the working_directory clean or not?
-search_status()
+function search_status()
 {
     searchresult=$(git status|grep "working directory clean")
     if [ -z "${searchresult}" ]; then
@@ -74,7 +85,7 @@ search_status()
     fi
 }
 
-develop_new_feature()
+function develop_new_feature()
 {
     read -p "Please give me a branch name,such as Feature-XXX:" branchname
 
@@ -85,7 +96,7 @@ develop_new_feature()
     echo "Now you are in branch $branchname,enjoy your code!"
 }
 
-fix_bug()
+function fix_bug()
 {
     read -p "Please give me a branch name,such as Bug-XXX:" branchname
 
@@ -96,7 +107,7 @@ fix_bug()
     echo "Now you are in branch $branchname,Fix the bug Now!"
 }
 
-push_for_review()
+function push_for_review()
 {
     git branch
     read -p "Which branch do you want to push for review?" branchname
@@ -113,7 +124,7 @@ push_for_review()
     fi
 }
 
-modify_branch()
+function modify_branch()
 {
     git branch
     read -p "Which branch do you want to modify?" branchname
@@ -124,7 +135,7 @@ modify_branch()
     echo "Now you are in branch $branchname,enjoy you code!"
 }
 
-commit_branch()
+function commit_branch()
 {
     git branch
     read -p "Which branch do you want to commit to develop branch?" branchname
@@ -146,7 +157,7 @@ commit_branch()
     fi
 }
 
-review_branch()
+function review_branch()
 {
     git branch -avv
     read -p "Which branch do you want to review,such as origin/XXX?" branchname
@@ -156,8 +167,7 @@ review_branch()
     echo "How to review?"
     echo "1) gitk"
     echo "2) git diff"
-    echo "3) git difftool"
-    echo "4) others"
+    echo "3) others"
     read -p "Please input the index number:" userchoice
 
     case $userchoice in 
@@ -168,17 +178,6 @@ review_branch()
             git diff origin/develop...$branchname
             ;;
         "3")
-            if [ -f ~/.gitconfig ]; then
-                searchresult=$(cat ~/.gitconfig | grep "diff")
-                if [ -z "${searchresult}" ]; then
-                    echo "difftool has not been set,please use"
-                    echo "git config --global diff.tool "XXX""
-                    exit
-                fi
-            fi
-            git difftool origin/develop...$branchname
-            ;;
-        "4")
             echo "you can review the branch by you own"
             exit
             ;;
@@ -188,7 +187,7 @@ review_branch()
     esac
 }
 
-after_review_branch()
+function after_review_branch()
 {
 
     git branch -avv
@@ -202,16 +201,34 @@ after_review_branch()
     echo "notify the branch developer to commit his branch to develop branch"
 }
 
+function pull_from_remote()
+{
+    git branch -avv
+    read -p "Which branch is branch you want pull,such as origin/XXX?" branchname
+    search_result $branchname "origin/"
+    search_branch $branchname
+
+    remotename=${branchname#*/}
+    search_local_branch $remotename
+
+    git checkout -b $remotename $branchname 2>&1 >/dev/null
+    if [ $? -eq 0 ];then
+    echo "Now you are in branch $remotename,enjoy you code!"
+    else
+    echo "you have something need to commit,pull from remote fail!"
+    fi
+}
 
 
 echo "Welcome,what do you want?"
 echo "1) develop a new feature"
 echo "2) fix a bug in develop branch"
-echo "3) push a branch for review"
-echo "4) modify a branch after review failure"
-echo "5) commit a branch after review success"
-echo "6) as a CTT,review a branch"
-echo "7) as a CTT,after review a finished branch"
+echo "3) pull a remote branch from partner"
+echo "4) push a feature branch to remote repository"
+echo "5) modify a branch after review failure"
+echo "6) commit a branch after review success"
+echo "7) as a CTT,review a branch"
+echo "8) as a CTT,after review a finished branch"
 
 read -p "Please input the index number:" userchoice
 
@@ -226,20 +243,24 @@ case $userchoice in
         ;;
     "3")
         check_env
-        push_for_review
+        pull_from_remote
         ;;
     "4")
-        modify_branch
+        check_env
+        push_for_review
         ;;
     "5")
-        check_env
-        commit_branch
+        modify_branch
         ;;
     "6")
         check_env
-        review_branch
+        commit_branch
         ;;
     "7")
+        check_env
+        review_branch
+        ;;
+    "8")
         check_env
         after_review_branch
         ;;
